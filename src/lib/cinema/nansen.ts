@@ -80,6 +80,18 @@ export class NansenClient {
     });
   }
 
+  tokenHolders(args: { chain: string; tokenAddress: string }) {
+    return this.post("/api/v1/tgm/holders", {
+      chain: args.chain,
+      token_address: args.tokenAddress,
+      aggregate_by_entity: false,
+      label_type: "all_holders",
+      pagination: { page: 1, per_page: 10 },
+      premium_labels: false,
+      order_by: [{ field: "value_usd", direction: "DESC" }],
+    });
+  }
+
   tokenDexTrades(args: { chain: string; tokenAddress: string; from: string; to: string; perPage?: number }) {
     return this.post("/api/v1/tgm/dex-trades", {
       chain: args.chain,

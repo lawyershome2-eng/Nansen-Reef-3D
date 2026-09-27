@@ -28,6 +28,19 @@ test("a missing actor does not throw", () => {
   assert.ok(Number.isFinite(params.scale));
 });
 
+test("a holder lingers instead of crossing", () => {
+  const params = eventToParams({
+    ...base,
+    side: "transfer",
+    metadata: { role: "holder", rank: 0 },
+    from: { kind: "wallet", label: "Wintermute", address: "0xabc" },
+  });
+  assert.equal(params.behavior, "linger");
+  assert.equal(params.bracket, "holder");
+  assert.equal(params.lifetime, Infinity);
+  assert.ok(params.score > 50);
+});
+
 test("size and who decide the bracket", () => {
   assert.equal(bracketFor({ ...base, usd: 200 }), "shrimp");
   assert.equal(bracketFor({ ...base, usd: 10_000 }), "wallet");

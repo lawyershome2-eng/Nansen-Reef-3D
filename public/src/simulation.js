@@ -46,6 +46,24 @@ export class Simulation {
     }
     const p = eventToParams(ev);
     const B = this.cfg.bounds;
+    if (p.behavior === 'linger') {
+      const home = [this.r(-B.x * 0.62, B.x * 0.62), this.r(-B.y * 0.25, B.y * 0.7), this.r(-B.z * 0.55, B.z * 0.55)];
+      const e = {
+        id: this.nextId++,
+        event: ev,
+        ambient: false,
+        pos: home.slice(),
+        vel: [this.r(-0.15, 0.15), 0, this.r(-0.15, 0.15)],
+        target: home.slice(),
+        home,
+        wanderAt: 0,
+        age: 0, alpha: 0, state: 'entering', phase: this.r(0, 6.28),
+        ...p,
+      };
+      this.entities.push(e);
+      this.listeners.forEach((fn) => fn(e));
+      return e;
+    }
     const laneY = (p.lane.y * 2 - 1) * B.y * 0.85;
     const laneZ = (p.lane.z * 2 - 1) * B.z * 0.85;
     const e = {
@@ -98,7 +116,15 @@ export class Simulation {
       e.age += dt;
 
       // lifecycle
-      if (!e.ambient) {
+      if (e.behavior === 'linger') {
+        if (e.state === 'entering' && e.age > this.cfg.fadeIn) e.state = 'active';
+        e.alpha = Math.min(1, e.age / this.cfg.fadeIn);
+        if (e.wanderAt <= this.time || !e.target) {
+          const home = e.home || e.pos;
+          e.target = [home[0] + this.r(-2.2, 2.2), home[1] + this.r(-0.45, 0.45), home[2] + this.r(-1.5, 1.5)];
+          e.wanderAt = this.time + this.r(6, 12);
+        }
+      } else if (!e.ambient) {
         const left = e.lifetime - e.age;
         const dx = e.target[0] - e.pos[0];
         if (e.state !== 'exiting' && (left < this.cfg.fadeOut || Math.abs(dx) < 2)) e.state = 'exiting';
@@ -136,7 +162,7 @@ export class Simulation {
       const wall = (v, lim, axis) => {
         if (v > lim) acc[axis] -= (v - lim) * 2; else if (v < -lim) acc[axis] -= (v + lim) * 2;
       };
-      if (e.ambient) wall(e.pos[0], B.x, 0);
+      if (e.ambient || e.behavior === 'linger') wall(e.pos[0], B.x, 0);
       wall(e.pos[1], B.y, 1); wall(e.pos[2], B.z, 2);
 
       // integrate
@@ -175,7 +201,7 @@ function seek(e, acc) {
   if (!e.target) return;
   const dx = e.target[0] - e.pos[0], dy = e.target[1] - e.pos[1], dz = e.target[2] - e.pos[2];
   const d = Math.hypot(dx, dy, dz) || 1;
-  const arrive = e.ambient ? Math.min(1, d / 6) : 1; // ambient fish slow down near their goal
+  const arrive = e.ambient || e.behavior === 'linger' ? Math.min(1, d / (e.behavior === 'linger' ? 1.6 : 6)) : 1;
   const want = e.maxSpeed * arrive;
   const sx = (dx / d) * want - e.vel[0], sy = (dy / d) * want - e.vel[1], sz = (dz / d) * want - e.vel[2];
   const m = Math.hypot(sx, sy, sz) || 1, lim = Math.min(m, e.accel) / m;

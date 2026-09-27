@@ -28,7 +28,7 @@ import { connect } from '../../src/stream.js';
 import { createNameplates } from './nameplates.js';
 
 const POOL = { chromis: 48, anthias: 32 }; // shrimp and wallets are chromis; smart, funds, and whales are anthias
-const MESH = { shrimp: 'chromis', wallet: 'chromis', smart: 'anthias', institution: 'anthias', whale: 'anthias' };
+const MESH = { shrimp: 'chromis', wallet: 'chromis', smart: 'anthias', institution: 'anthias', whale: 'anthias', holder: 'anthias' };
 const AMPLITUDE = { chromis: 0.095, anthias: 0.095 }; // matches native non-clown amplitude
 const HIDE_Y = -50; // parked far below the tank floor when a pool slot is unused
 

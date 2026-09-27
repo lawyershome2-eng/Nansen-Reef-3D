@@ -2,7 +2,7 @@ import { DEMO_ENTITIES, DEMO_TOKENS, filterCatalog, knownLabel, tokenByAddress }
 import { Seen } from "./dedupe.ts";
 import { DemoTide, demoAddressFor, type DemoSubject } from "./demo.ts";
 import { getNansen, isRetryable, publicMessage, type NansenClient } from "./nansen.ts";
-import { normalizeTokenTrades, normalizeTokenTransfers, normalizeWalletTransactions } from "./normalize.ts";
+import { demoHolders, normalizeHolders, normalizeTokenTrades, normalizeTokenTransfers, normalizeWalletTransactions } from "./normalize.ts";
 import {
   addressOk,
   dateWindow,
@@ -143,6 +143,7 @@ class WatchSession {
   private timers = new Set<ReturnType<typeof setTimeout>>();
   private stopped = false;
   private first = true;
+  private holdersSent = false;
   private calls = 0;
   private runtime: Runtime | null = null;
   private tide: DemoTide | null = null;
@@ -352,6 +353,19 @@ class WatchSession {
     throw new WatchRejected(`Nothing matched “${name}”.`);
   }
 
+  private async takeHolders(): Promise<CinemaEvent[]> {
+    const r = this.runtime;
+    if (this.holdersSent || !r || r.kind !== "token") return [];
+    this.holdersSent = true;
+    const ctx = { chain: r.chain, address: r.address, symbol: r.label };
+    if (!this.nansen || !this.live) return demoHolders(ctx);
+    try {
+      return normalizeHolders(await this.nansen.tokenHolders({ chain: r.chain, tokenAddress: r.address }), ctx);
+    } catch {
+      return [];
+    }
+  }
+
   private async fetchEvents(): Promise<CinemaEvent[]> {
     const r = this.runtime;
     if (!r) return [];
@@ -395,14 +409,17 @@ class WatchSession {
     if (this.stopped || !this.runtime) return;
     const pollMs = this.live ? LIVE_POLL_MS : DEMO_POLL_MS;
     try {
+      const holders = await this.takeHolders();
       const events = await this.fetchEvents();
       if (this.stopped) return;
       this.absorbLabels(events);
       let fresh = this.seen.filter(events).sort((a, b) => a.timestamp - b.timestamp);
       if (this.first) fresh = fresh.slice(-FIRST_BATCH);
       this.first = false;
+      holders.forEach((ev, i) => this.later(i * 220, () => this.emit("cinema", ev)));
       const gap = fresh.length ? Math.min(this.live ? 900 : 380, (pollMs * 0.75) / fresh.length) : 0;
-      fresh.forEach((ev, i) => this.later(i * gap, () => this.emit("cinema", ev)));
+      const after = holders.length * 220;
+      fresh.forEach((ev, i) => this.later(after + i * gap, () => this.emit("cinema", ev)));
       this.calls += 1;
       this.emit("status", this.status("running"));
       this.later(pollMs, () => void this.poll());

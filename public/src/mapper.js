@@ -57,6 +57,24 @@ export function dirFor(ev) {
 }
 
 export function eventToParams(ev) {
+  if (ev?.metadata?.role === 'holder') {
+    const rank = Math.min(9, Math.max(0, Number(ev.metadata.rank) || 0));
+    const scale = 2.15 - rank * 0.08;
+    return {
+      t: usdToT(ev.usd),
+      scale,
+      bracket: 'holder',
+      mass: scale ** 3,
+      species: 2,
+      maxSpeed: 0.65,
+      accel: 1.3,
+      lifetime: Infinity,
+      score: 80 - rank,
+      behavior: 'linger',
+      lane: { y: hash01((ev.from?.address || '') + 'y'), z: hash01((ev.from?.address || '') + 'z') },
+      dir: 1,
+    };
+  }
   const t = usdToT(ev.usd);
   const bracket = bracketFor(ev);
   const scale = (0.8 + t * 4.0) * (BRACKET_SCALE[bracket] || 1);

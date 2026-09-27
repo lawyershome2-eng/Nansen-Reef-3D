@@ -25,5 +25,7 @@ export type CinemaEvent = {
     source: string;
     transactionType?: string;
     tradedToken?: { symbol: string; address: string };
+    role?: "holder";
+    rank?: number;
   };
 };

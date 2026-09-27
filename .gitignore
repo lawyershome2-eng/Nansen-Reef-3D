@@ -20,3 +20,10 @@ attachments/
 .vercel/
 .grok/
 .tanstack/
+artifacts/
+.node_modules.lock
+.project_id
+attachments/
+.vercel/
+.grok/
+.tanstack/

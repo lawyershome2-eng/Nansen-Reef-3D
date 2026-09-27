@@ -27,6 +27,11 @@ function whoLine(ev) {
 }
 
 export function fishCaption(ev) {
+  if (ev?.metadata?.role === "holder") {
+    const who = clip(ev?.from?.label, 22) || "Holder";
+    const usd = formatUsd(ev?.usd);
+    return { symbol: clip(ev?.token?.symbol || "Token", 16), meta: ["holds", usd].filter(Boolean).join(" · "), who, side: "hold" };
+  }
   const symbol = clip(ev?.token?.symbol || "Token", 16);
   const side = SIDE[ev?.side] || "";
   const usd = formatUsd(ev?.usd);

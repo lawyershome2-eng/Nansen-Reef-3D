@@ -84,6 +84,75 @@ export function normalizeTokenTrade(raw: Raw): CinemaEvent | null {
   };
 }
 
+function holderKind(label: string): CinemaEvent["from"]["kind"] {
+  const text = label.toLowerCase();
+  if (text.includes("fund") || text.includes("institution")) return "fund";
+  if (text.includes("smart") || text.includes("kol") || text.includes("public figure")) return "smart";
+  return "wallet";
+}
+
+export function normalizeHolders(
+  resp: unknown,
+  ctx: { chain: string; address: string; symbol?: string },
+): CinemaEvent[] {
+  const ranked = rowsOf(resp)
+    .map((raw) => ({ raw, usd: num(raw.value_usd) ?? 0 }))
+    .sort((a, b) => b.usd - a.usd)
+    .slice(0, 10);
+  const symbol = ctx.symbol || "TOKEN";
+  const out: CinemaEvent[] = [];
+  ranked.forEach(({ raw, usd }, rank) => {
+    const address = str(raw.address);
+    if (!address) return;
+    const label = str(raw.address_label) || `${address.slice(0, 6)}…${address.slice(-4)}`;
+    const id = ["holder", ctx.chain, ctx.address, address].join(":");
+    out.push({
+      id,
+      timestamp: Date.now() - rank,
+      chain: ctx.chain,
+      usd,
+      side: "transfer",
+      token: { symbol, address: ctx.address },
+      from: { address, label, kind: holderKind(label) },
+      to: null,
+      metadata: { txHash: id, source: "nansen-holders", role: "holder", rank },
+    });
+  });
+  return out;
+}
+
+const DEMO_HOLDER_NAMES = [
+  "Wintermute",
+  "Jump",
+  "Smart Trader",
+  "Binance",
+  "Cumberland",
+  "Public Figure",
+  "Fund",
+  "Amber",
+  "GSR",
+  "Wallet",
+];
+
+export function demoHolders(ctx: { chain: string; address: string; symbol?: string }): CinemaEvent[] {
+  const symbol = ctx.symbol || "TOKEN";
+  return DEMO_HOLDER_NAMES.map((label, rank) => {
+    const address = `holder-${rank}-${ctx.address.slice(0, 8)}`;
+    const id = ["holder", ctx.chain, ctx.address, address].join(":");
+    return {
+      id,
+      timestamp: Date.now() - rank,
+      chain: ctx.chain,
+      usd: Math.round(4_000_000 / (rank + 1)),
+      side: "transfer" as const,
+      token: { symbol, address: ctx.address },
+      from: { address, label, kind: holderKind(label) },
+      to: null,
+      metadata: { txHash: id, source: "demo-holders", role: "holder" as const, rank },
+    };
+  });
+}
+
 export function normalizeTokenTrades(resp: unknown): CinemaEvent[] {
   return rowsOf(resp)
     .map((r) => normalizeTokenTrade(r))
