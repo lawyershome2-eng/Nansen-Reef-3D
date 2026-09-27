@@ -1,0 +1,15 @@
+.vercel/
+.tanstack/
+.grok/
+node_modules/
+artifacts/
+.node_modules.lock
+.project_id
+attachments/
+artifacts/
+.node_modules.lock
+.project_id
+attachments/
+.vercel/
+.grok/
+.tanstack/

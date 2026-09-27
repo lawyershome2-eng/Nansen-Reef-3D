@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#04101d" />
+    <title>Nansen Reef</title>
+    <meta
+      name="description"
+      content="Choose the aquarium or the pipeline. Nansen opens the tank. Pipeline opens the feed."
+    />
+    <style>
+      :root {
+        --background: #04101d;
+        --text: #e7f4ff;
+        --muted: #9fd3ea;
+        --line: #2c536b;
+        --scrim: #04101dcc;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        color: var(--text);
+        font: 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          linear-gradient(100deg, #04101df2 0%, #04101dcc 42%, #04101d55 100%),
+          url("/landing/reef.png") center / cover no-repeat fixed,
+          var(--background);
+      }
+      main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 28px;
+        padding: 32px 28px 40px;
+        max-width: 920px;
+      }
+      p { margin: 0; }
+      .mark {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      h1 {
+        margin: 8px 0 0;
+        font-size: clamp(40px, 7vw, 68px);
+        font-weight: 650;
+        letter-spacing: -0.03em;
+        line-height: 0.95;
+      }
+      .lead {
+        max-width: 36rem;
+        color: var(--muted);
+        margin-top: 14px;
+      }
+      .ways {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      a.way {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: var(--scrim);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 18px 16px;
+        min-height: 148px;
+      }
+      a.way:hover, a.way:focus-visible {
+        background: #0c1c2ce6;
+        outline: none;
+      }
+      a.way strong {
+        display: block;
+        font-size: 22px;
+        font-weight: 650;
+        margin-bottom: 8px;
+      }
+      a.way span { color: var(--muted); }
+      .go {
+        display: inline-block;
+        margin-top: 16px;
+        color: var(--text);
+        font-size: 14px;
+      }
+      @media (max-width: 680px) {
+        body { background-attachment: scroll; }
+        main { padding: 24px 16px 28px; justify-content: flex-end; }
+        .ways { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="mark">Nansen Reef</p>
+        <h1>Two ways in.</h1>
+        <p class="lead">The same tide, shown two ways. Pick one. The tank and the feed stay where they are.</p>
+      </header>
+      <nav class="ways" aria-label="Where to go">
+        <a class="way" href="/reefscape/index.html">
+          <strong>Nansen</strong>
+          <span>The aquarium. Trades arrive as fish. Drag to turn the tank, pinch to come closer, and open the key if you need to know which fish is which.</span>
+          <em class="go">Open the aquarium</em>
+        </a>
+        <a class="way" href="/pipeline.html">
+          <strong>Pipeline</strong>
+          <span>The same tide, drawn flat. Use it when you want to read the feed instead of swimming through it.</span>
+          <em class="go">Open the pipeline</em>
+        </a>
+      </nav>
+    </main>
+  </body>
+</html>
