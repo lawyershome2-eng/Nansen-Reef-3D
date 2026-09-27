@@ -7,11 +7,20 @@
 <style>
   html, body { margin: 0; height: 100%; background: #04141f; overflow: hidden; }
   canvas { width: 100%; height: 100%; display: block; }
-  #hud { position: fixed; left: 8px; top: 8px; color: #9fd3ea; font: 12px system-ui; background: #0008; padding: 4px 8px; border-radius: 6px; }
+  #hud { position: fixed; left: 8px; top: 40px; color: #9fd3ea; font: 12px system-ui; background: #0008; padding: 4px 8px; border-radius: 6px; }
   #back { position: fixed; right: 8px; top: 8px; color: #e7f4ff; font: 12px system-ui; background: #0008; padding: 6px 10px; border-radius: 6px; text-decoration: none; }
+  .bar { position: fixed; left: 8px; top: 8px; display: flex; align-items: center; gap: 8px; z-index: 2; }
+  .powered { display: inline-flex; align-items: center; gap: 8px; color: #e7f4ff; font: 13px system-ui; text-decoration: none; background: #0008; padding: 4px 8px; border-radius: 6px; }
+  .powered img { width: 18px; height: 18px; display: block; }
+  .powered b { font-weight: 750; }
+  .x { color: #9fd3ea; font: 12px system-ui; text-decoration: none; background: #0008; padding: 6px 8px; border-radius: 6px; }
 </style>
 </head>
 <body>
+<div class="bar">
+<a class="powered" href="https://nansen.ai" target="_blank" rel="noopener noreferrer"><img src="/brand/nansen-mark.png" alt="" width="18" height="18" /> Powered by <b>Nansen</b></a>
+<a class="x" href="https://x.com/nansen_ai" target="_blank" rel="noopener noreferrer">@nansen_ai</a>
+</div>
 <canvas id="c"></canvas>
 <div id="hud">connecting</div>
 <a id="back" href="/reefscape/index.html">Reef</a>

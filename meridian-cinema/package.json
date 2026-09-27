@@ -1,0 +1,14 @@
+{
+  "name": "meridian-cinema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "mock": "MERIDIAN_MODE=mock node server/index.js",
+    "test": "node test/smoke.mjs && node test/bridge.mjs && node test/reef-bridge.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

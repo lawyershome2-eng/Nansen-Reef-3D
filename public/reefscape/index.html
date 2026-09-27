@@ -28,7 +28,13 @@
         aria-label="A saltwater tank. Drag to turn it. Pinch to zoom. Trades arrive as fish with their names on them. Tap to feed. Space pauses. F enters fullscreen. H hides controls."
       ></canvas>
       <nav class="chrome" aria-label="Nansen Reef">
-        <a class="home-link" href="/reefscape/index.html" aria-label="Nansen Reef">Nansen</a>
+        <div class="nansen-links">
+          <a class="powered" href="https://nansen.ai" target="_blank" rel="noopener noreferrer">
+            <img src="/brand/nansen-mark.png" alt="" width="22" height="22" />
+            <span>Powered by <b>Nansen</b></span>
+          </a>
+          <a class="ext" href="https://x.com/nansen_ai" target="_blank" rel="noopener noreferrer">@nansen_ai</a>
+        </div>
         <div class="scene-nav">
           <a href="/pipeline.html">Pipeline</a>
           <span aria-current="page">Reef</span>
@@ -91,6 +97,10 @@
             <option value="detail">Detail</option>
           </select>
           <button disabled id="hide" title="H">Hide controls</button>
+        </div>
+        <div class="credits">
+          <a href="https://github.com/lawyershome2-eng/Nansen-Reef-3D" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://x.com/defitony0x" target="_blank" rel="noopener noreferrer">@defitony0x</a>
         </div>
       </footer>
       <button disabled id="show-controls" title="H">Show controls</button>

@@ -37,6 +37,29 @@
         max-width: 920px;
       }
       p { margin: 0; }
+      .top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 28px;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: inherit;
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .brand img { width: 26px; height: 26px; display: block; }
+      .brand b { font-weight: 750; letter-spacing: -0.03em; }
+      .x { color: var(--muted); text-decoration: none; font-size: 14px; }
+      .x:hover { color: var(--text); }
       .mark {
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -95,6 +118,13 @@
     </style>
   </head>
   <body>
+    <header class="top">
+      <a class="brand" href="https://nansen.ai" target="_blank" rel="noopener noreferrer">
+        <img src="/brand/nansen-mark.png" alt="" width="26" height="26" />
+        <span>Powered by <b>Nansen</b></span>
+      </a>
+      <a class="x" href="https://x.com/nansen_ai" target="_blank" rel="noopener noreferrer">@nansen_ai</a>
+    </header>
     <main>
       <header>
         <p class="mark">Nansen Reef</p>
