@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "${RAILWAY_URL}/api/$1",
+      "env": ["RAILWAY_URL"]
+    },
+    { "handle": "filesystem" },
+    { "src": "/", "dest": "/reefscape/index.html" }
+  ]
+}
