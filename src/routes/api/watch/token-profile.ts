@@ -124,5 +124,10 @@ export async function tokenProfileResponse(request: Request): Promise<Response> 
   }
 }
 
-export const Route = createFileRoute("/api/watch/token-
-... 
+export const Route = createFileRoute("/api/watch/token-profile")({
+  server: {
+    handlers: {
+      GET: ({ request }) => tokenProfileResponse(request),
+    },
+  },
+});
