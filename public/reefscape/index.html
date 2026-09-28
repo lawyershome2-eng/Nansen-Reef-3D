@@ -60,6 +60,8 @@
             <option value="polygon">Polygon</option>
             <option value="bnb">BNB</option>
             <option value="avalanche">Avalanche</option>
+            <option value="robinhood">Robinhood</option>
+            <option value="arc">Arc</option>
             <option value="all">All chains</option>
           </select>
           <label class="sr-only" for="watch-filter">Token feed</label>
@@ -72,6 +74,39 @@
         <p id="watch-status" role="status">Smart money ocean</p>
         <div id="watch-picks" class="watch-picks" hidden></div>
       </form>
+
+      <!-- Token profile: right rail (desktop) / bottom sheet (mobile). Only after token resolve. -->
+      <aside id="token-profile" class="token-profile chrome" hidden aria-label="Token profile">
+        <header class="tp-head">
+          <div class="tp-title">
+            <span id="tp-emoji" aria-hidden="true">🪙</span>
+            <span id="tp-symbol">—</span>
+            <span id="tp-name-paren" class="tp-muted"></span>
+          </div>
+          <button type="button" id="tp-collapse" class="tp-collapse" title="Hide profile" aria-expanded="true">Hide</button>
+        </header>
+        <p id="tp-address" class="tp-address mono"></p>
+        <p id="tp-chain-line" class="tp-line">
+          <span id="tp-chain-badge">—</span>
+        </p>
+        <div class="tp-grid">
+          <div class="tp-row"><span>🧢 MC</span><span id="tp-mc">—</span></div>
+          <div class="tp-row"><span>💵 FDV</span><span id="tp-fdv">—</span></div>
+          <div class="tp-row"><span>💧 Liquidity</span><span id="tp-liq">—</span></div>
+          <div class="tp-row"><span>📊 Vol (1d)</span><span id="tp-vol">—</span></div>
+          <div class="tp-row"><span>🟢 Buys</span><span id="tp-buys">—</span></div>
+          <div class="tp-row"><span>🔴 Sells</span><span id="tp-sells">—</span></div>
+          <div class="tp-row"><span>👥 Holders</span><span id="tp-holders">—</span></div>
+          <div class="tp-row"><span>📅 Deployed</span><span id="tp-deploy">—</span></div>
+        </div>
+        <p class="tp-na-note">Taxes · Max buy/sell · Burn · Clog · Audit · Launchpad —</p>
+        <footer class="tp-foot">
+          <a id="tp-dex" href="#" target="_blank" rel="noopener noreferrer">DexScreener</a>
+          <span id="tp-live" class="tp-muted"></span>
+        </footer>
+      </aside>
+      <button type="button" id="tp-show" class="tp-show chrome" hidden title="Show token profile">Token</button>
+
       <details class="key chrome">
         <summary>Key</summary>
         <ul>
