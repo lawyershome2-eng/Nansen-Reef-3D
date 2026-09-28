@@ -103,69 +103,18 @@ export class NansenClient {
     });
   }
 
+  /** Token God Mode — token information (MC, liquidity, holders, volume, socials). 1 credit. */
+  tokenInformation(args: { chain: string; tokenAddress: string; timeframe?: string }) {
+    return this.post("/api/v1/tgm/token-information", {
+      chain: args.chain,
+      token_address: args.tokenAddress,
+      timeframe: args.timeframe ?? "1d",
+    });
+  }
+
   walletTransactions(args: { address: string; chain: string; from: string; to: string; perPage?: number }) {
     return this.post("/api/v1/profiler/address/transactions", {
       address: args.address,
       chain: args.chain,
-      date: { from: args.from, to: args.to },
-      hide_spam_token: true,
-      pagination: { page: 1, per_page: args.perPage ?? 20 },
-      order_by: [{ field: "block_timestamp", direction: "DESC" }],
-    });
-  }
-
-  searchGeneral(query: string, resultType: "token" | "entity" | "any", chain?: string) {
-    return this.post("/api/v1/search/general", {
-      search_query: query,
-      result_type: resultType,
-      limit: 12,
-      ...(chain && chain !== "all" ? { chain } : {}),
-    });
-  }
-
-  searchEntityName(query: string) {
-    return this.post("/api/v1/search/entity-name", { search_query: query });
-  }
-
-  // 100 credits a call. Watch does not call this on its own: transfer rows
-  // already carry from/to labels, and a miss still costs the full amount.
-  addressLabels(address: string, chain: string) {
-    return this.post("/api/v1/profiler/address/labels", {
-      address,
-      chain,
-      pagination: { page: 1, per_page: 10 },
-    });
-  }
-}
-
-let cachedKey = "";
-let cached: NansenClient | null = null;
-
-export function getNansen(): NansenClient | null {
-  const key = process.env.NANSEN_API_KEY?.trim() || "";
-  if (!key) return null;
-  if (key !== cachedKey || !cached) {
-    cachedKey = key;
-    cached = new NansenClient(key);
-  }
-  return cached;
-}
-
-export function isRetryable(err: unknown): boolean {
-  if (err instanceof NansenError) return err.retryable;
-  if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) return true;
-  return err instanceof TypeError;
-}
-
-export function publicMessage(err: unknown): string {
-  if (err instanceof NansenError) {
-    if (err.status === 401 || err.status === 403) return "Nansen refused the key.";
-    if (err.status === 429) return "Nansen rate limit. Waiting to try again.";
-    if (err.status >= 500) return "Nansen is unavailable. Waiting to try again.";
-    const detail = err.detail.replace(/\s+/g, " ").trim().slice(0, 160);
-    return detail ? `Nansen rejected the watch (${err.status}). ${detail}` : `Nansen rejected the watch (${err.status}).`;
-  }
-  if (err instanceof Error && err.name === "TimeoutError") return "Nansen took too long. Waiting to try again.";
-  if (err instanceof Error && err.message) return err.message.slice(0, 180);
-  return "Watch failed.";
-}
+      date: { from: args.f
+... 
