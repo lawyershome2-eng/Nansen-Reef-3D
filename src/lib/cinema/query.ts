@@ -122,5 +122,49 @@ export function rankSearch(query: string, tokens: TokenHit[], entities: EntityHi
     .sort((a, b) => b.score - a.score);
   if (loose.length && entities.length === 0) {
     const same = loose.filter((x) => x.score === loose[0]!.score).map((x) => x.t);
-    const 
-... 
+    const pick = preferChain(same, chain) || same[0];
+    if (pick) return { kind: "token", token: pick };
+  }
+
+  if (entities[0]) return { kind: "entity", name: entities[0].name };
+  return { kind: "none" };
+}
+
+function preferChain(list: TokenHit[], chain?: string): TokenHit | undefined {
+  if (!list.length) return undefined;
+  if (chain && chain !== "all") {
+    const hit = list.find((t) => t.chain === chain);
+    if (hit) return hit;
+  }
+  return list[0];
+}
+
+export function actorOf(address: string, label: unknown): CinemaEvent["from"] {
+  const clean = String(label ?? "").trim();
+  let kind: CinemaEvent["from"]["kind"] = "wallet";
+  if (/fund/i.test(clean)) kind = "fund";
+  else if (clean) kind = "smart";
+  return { address: address || "", label: clean || shortAddr(address), kind };
+}
+
+export function parseTs(s: unknown): number {
+  if (typeof s !== "string" || !s) return Date.now();
+  const hasZone = /(Z|[+-]\d\d:?\d\d)$/.test(s);
+  const t = Date.parse(hasZone ? s : `${s.replace(" ", "T")}Z`);
+  return Number.isFinite(t) ? t : Date.now();
+}
+
+export function num(v: unknown): number | null {
+  if (v == null || v === "") return null;
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+export function usdOf(value: unknown, price?: unknown, amount?: unknown): number {
+  const direct = num(value);
+  if (direct != null && direct > 0) return Math.round(direct);
+  const p = num(price);
+  const a = num(amount);
+  if (p != null && a != null && p >= 0) return Math.round(Math.abs(p * a));
+  return direct != null && direct > 0 ? Math.round(direct) : 0;
+}
